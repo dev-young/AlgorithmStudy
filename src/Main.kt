@@ -1,8 +1,16 @@
-fun main(){
-    println("Hello Kotlin!")
+import java.util.*
 
-    var arr = arrayOf("Hello Kotlin!", "String", "array")
-    arr.iterator().forEach { s ->
-        println(s)
+fun main(){
+    val sc = Scanner(System.`in`)
+    val num = sc.nextInt()
+    print(factorial(num))
+
+}
+
+fun factorial(number:Int) : Int{
+    if(number > 1){
+        return number * factorial(number-1)
     }
+
+    return  1
 }
