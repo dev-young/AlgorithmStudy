@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 /*
 1.다음 자리에 돌이 있고 건널 수 있는 자리면 건넌다.
@@ -11,16 +12,20 @@ class Kakao2019_5{
     var emptyCount = 0  // 숫자가 0인 돌의 수
     val stonesMap = hashMapOf<Int, Int>()   // <돌idx, 다음 돌까지의 빈 돌의 수>
 
+    /**이게 더 효율성 점수가 낮다... 왜일까..? */
     fun solution(stones: IntArray, k: Int): Int {
+        stonesMap.clear()
         var answer = 0
-        val mins = HashSet(stones.asList()).toIntArray()
-        mins.sort()
-
+        var mins : IntArray = intArrayOf()
+        val time = measureTimeMillis {
+            mins = HashSet(stones.asList()).toIntArray()
+            mins.sort()
+        }
+        println(time)
         stonesMap[-1] = 0
         out@for (m in mins) {
             var min = m - answer
             answer += min
-            emptyCount = 0
 
             var index = stonesMap[-1]!!
             emptyCount = index
@@ -29,28 +34,24 @@ class Kakao2019_5{
 
                 if(stones[i] != 0) stones[i] = stones[i] - min
 
-
                 if(stones[i] == 0){
-                    emptyCount++
-                    stonesMap[i-1] = stonesMap.getOrDefault(i, 0) + 1
+                    val count = stonesMap.getOrDefault(i, 0)
+                    index += count
+                    emptyCount += count + 1
+                    stonesMap[i-1] = count + 1
                 } else {
                     emptyCount = 0
                 }
 
                 if(emptyCount >= k){
                     //더이상 못 건널때
-                    println(stones.contentToString())
+//                    println(stones.contentToString())
                     break@out
-                }
-
-                if(stonesMap.containsKey(i)){
-                    index += stonesMap[i]!!
-                    emptyCount += stonesMap[i]!!
                 }
                 index++
             }
 
-            println(stones.contentToString())
+//            println(stones.contentToString())
         }
 
         return answer
@@ -62,7 +63,6 @@ class Kakao2019_5{
         val mins = HashSet(stones.asList()).toIntArray()
         mins.sort()
 
-        stonesMap[-1] = 0
         out@for (m in mins) {
             var min = m - answer
             answer += min
@@ -74,7 +74,6 @@ class Kakao2019_5{
 
                 if(stones[i] != 0) stones[i] = stones[i] - min
 
-
                 if(stones[i] == 0){
                     emptyCount++
                 } else {
@@ -83,20 +82,19 @@ class Kakao2019_5{
 
                 if(emptyCount >= k){
                     //더이상 못 건널때
-                    println(stones.contentToString())
+//                    println(stones.contentToString())
                     break@out
                 }
                 index++
             }
-
-            println(stones.contentToString())
+//            println(stones.contentToString())
         }
 
         return answer
     }
 
 
-    fun solution3(stones: IntArray, k: Int): Int {
+    fun solution_notUse(stones: IntArray, k: Int): Int {
         var answer = 0
         var position = stones.size
 
@@ -123,22 +121,64 @@ class Kakao2019_5{
                 //성공
                 answer++
                 position = -1   // 위치 초기화
-                println(stones.contentToString())
+//                println(stones.contentToString())
             }
         }
 
 
 
-        println(stones.contentToString())
+//        println(stones.contentToString())
         return answer
     }
 }
 
 fun main() {
-//    val result = Kakao2019_5().solution2(intArrayOf(2, 4, 5, 3, 2, 1, 4, 2, 5, 1), 3)
-//    val result = Kakao2019_5().solution(intArrayOf(2, 4, 5, 3, 2, 1, 4, 2, 5, 1), 3)
-    val result = Kakao2019_5().solution(intArrayOf(5, 8, 5, 2, 6, 2), 3)
-    println(result)
+    val s = Kakao2019_5()
+//    println(s.solution2(intArrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 3, 2, 1, 4, 4, 4, 4, 4, 4, 4, 2, 5, 1), 6))
+//    println(s.solution(intArrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 3, 2, 1, 4, 4, 4, 4, 4, 4, 4, 2, 5, 1), 6))
+
+
+//    println(s.solution2(intArrayOf(3, 2, 2, 8, 1), 4))
+//    println(s.solution(intArrayOf(3, 2, 2, 8, 1), 4))
+
+
+//    println(s.solution2(intArrayOf(6, 1, 9, 6, 5), 1))
+//    println(s.solution(intArrayOf(6, 1, 9, 6, 5), 1))
+
+//    println(s.solution2(intArrayOf(9,2,1,8,3),2))
+//    println(s.solution(intArrayOf(9,2,1,8,3),2))
+
+    for(i in 1 .. 1){
+        val random = Random()
+        val size = 200000
+        val intArray = IntArray(size)
+        for(i in 0 until size){
+            intArray[i] = random.nextInt(200000000)+1
+        }
+
+        val r1 = s.solution(intArray.clone(), size)
+//        for(k in 1 .. size){
+//            println()
+//
+//            println(intArray.contentToString())
+//            val r1 = s.solution(intArray.clone(), k)
+//            println()
+//            println(intArray.contentToString())
+//            val r2 = s.solution2(intArray.clone(), k)
+//            println("$r1 , $r2")
+//            if(r1 != r2){
+//                println(intArray.contentToString())
+//                if(r1 < 3 || r2 <3)
+//                    println(k)
+//            }
+//        }
+    }
+
+
+//    println(Kakao2019_5().solution2(intArrayOf(2, 4, 5, 3, 2), 2))
+//    println(Kakao2019_5().solution(intArrayOf(2, 4, 5, 3, 2), 2))
+//    println(Kakao2019_5().solution2(intArrayOf(5, 8, 5, 2, 6, 2), 3))
+//    println(Kakao2019_5().solution(intArrayOf(5, 8, 5, 2, 6, 2), 3))
 }
 
 
