@@ -1,8 +1,10 @@
-import java.util.*
+package kakao
 
 class Kakao2020_4 {
     fun solution(board: Array<IntArray>): Int {
-        var answer = findShortestPath(Node(0,0), Node(board.size-1,board.size-1), board)
+        var answer = findShortestPath(
+            Node(0, 0),
+            Node(board.size - 1, board.size - 1), board)
 
         return answer
     }

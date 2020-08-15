@@ -1,3 +1,5 @@
+package kakao
+
 class Kakao2020_2 {
     val operaterPriority = arrayOf("+-*","+*-","-+*","-*+","*+-","*-+")
 

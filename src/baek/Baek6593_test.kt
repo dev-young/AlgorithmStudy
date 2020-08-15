@@ -1,8 +1,9 @@
+package baek
+
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
 
-//상범 빌딩
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     while(true){
         val lrc = readLine().split(' ')
@@ -41,7 +42,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
 
         var resultMessage = "Trapped!"
         if(start != null && end != null){
-            val time = findShortestTime(start, end, totalArray)
+            val time = findShortestTime1(start, end, totalArray)
             if(time > 0)
                 resultMessage = "Escaped in $time minute(s)."
         }
@@ -49,7 +50,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     }
 }
 
-fun findShortestTime(start: Node, end: Node, totalArray: Array<Array<CharArray>>): Int {
+fun findShortestTime1(start: Node, end: Node, totalArray: Array<Array<CharArray>>): Int {
 //    println(totalArray.contentDeepToString())
     val queue : Queue<Node> = LinkedList()
     queue.add(start)
@@ -69,14 +70,15 @@ fun findShortestTime(start: Node, end: Node, totalArray: Array<Array<CharArray>>
     val moveR = intArrayOf(0, 0, 1, -1, 0, 0)
     val moveC = intArrayOf(0, 0, 0, 0, 1, -1)
 
+    var counter = 0
     while (!queue.isEmpty()){
+        counter ++
         val now = queue.poll()
-
+        println("$now   $counter")
         for(i in 0 until  6){
             val nL = now.lev + moveL[i]
             val nR = now.row + moveR[i]
             val nC = now.col + moveC[i]
-
             if (nL < 0 || nL >= totalL || nR < 0 || nR >= totalR || nC < 0 || nC >= totalC) continue
             if(totalArray[nL][nR][nC] == '#') continue
 
@@ -90,10 +92,4 @@ fun findShortestTime(start: Node, end: Node, totalArray: Array<Array<CharArray>>
 
     return distance[end.lev][end.row][end.col]
 
-}
-
-class Node (val lev:Int,val  row:Int,val  col:Int){
-    override fun toString(): String {
-        return "lev=$lev, row=$row, col=$col"
-    }
 }

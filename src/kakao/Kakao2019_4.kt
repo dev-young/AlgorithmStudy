@@ -1,9 +1,46 @@
-import kotlin.collections.HashMap
+package kakao
 
 fun main() {
 
-    val result = solution200508_1(100, longArrayOf(3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,5,6,7,8,9,10,11,12,13,14,4,4,4,4,1))
-//    val result = solution(10, longArrayOf(1,3,4,1,3,1))
+    val result = solution200508_1(
+        100,
+        longArrayOf(
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            4,
+            4,
+            4,
+            4,
+            1
+        )
+    )
+//    val result = kakao.solution(10, longArrayOf(1,3,4,1,3,1))
     println(result.contentToString())
 }
 

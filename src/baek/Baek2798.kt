@@ -1,7 +1,7 @@
+package baek
+
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import kotlin.system.measureNanoTime
-import kotlin.system.measureTimeMillis
 
 //블랙잭
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {

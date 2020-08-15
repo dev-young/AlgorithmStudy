@@ -1,3 +1,5 @@
+package kakao
+
 class Kakao2020_3 {
     fun solution(gems: Array<String>): IntArray {
         var answer = intArrayOf(1, gems.size)
@@ -34,7 +36,7 @@ class Kakao2020_3 {
 
 fun main() {
     val s = Kakao2020_3()
-//    var r = s.solution(arrayOf("AA", "AB", "AC", "AA", "AC"))
+//    var r = s.kakao.solution(arrayOf("AA", "AB", "AC", "AA", "AC"))
     println(s.solution(arrayOf("DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA")).contentToString())
     println(s.solution(arrayOf("AA", "AB", "AC", "AA", "AC")).contentToString())
     println(s.solution(arrayOf("XYZ", "XYZ", "XYZ")).contentToString())

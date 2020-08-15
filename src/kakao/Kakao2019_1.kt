@@ -1,4 +1,4 @@
-import java.util.*
+package kakao
 
 fun main() {
     val board : Array<IntArray> = arrayOf(

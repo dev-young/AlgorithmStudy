@@ -1,10 +1,17 @@
+package kakao
+
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
 fun main() {
 
-    println(solution200507_2(arrayOf("frodo", "fradi", "crodo", "abc123", "frodoc"), arrayOf("c****","**a**","******")))
-//    println(solution(arrayOf("1", "6", "2", "3", "4", "5", "7", "8", "9"), arrayOf("c****","**a**")))
+    println(
+        solution200507_2(
+            arrayOf("frodo", "fradi", "crodo", "abc123", "frodoc"),
+            arrayOf("c****", "**a**", "******")
+        )
+    )
+//    println(kakao.solution(arrayOf("1", "6", "2", "3", "4", "5", "7", "8", "9"), arrayOf("c****","**a**")))
 }
 
 fun solution200507_2(userIds: Array<String>, bannedIds: Array<String>): Int {
@@ -84,7 +91,7 @@ fun solution(user_id: Array<String>, banned_id: Array<String>): Int {
 //
 //        val set = hashSetOf<String>()
 //        for (user in user_id) {
-//            if (isPosible(user, banned)){
+//            if (kakao.isPosible(user, banned)){
 //                set.add(user)
 //                availableSet.add(user)
 //            }
@@ -94,7 +101,7 @@ fun solution(user_id: Array<String>, banned_id: Array<String>): Int {
 //    }
 //
 //
-//    val result = doComb(availableSet.toTypedArray(), banned_id.size)
+//    val result = kakao.doComb(availableSet.toTypedArray(), banned_id.size)
 //    result.forEach { println(it.toString()) }
 
 
@@ -153,7 +160,7 @@ fun isPosible(users : ArrayList<String>, banneds : Array<String>) : Boolean{
     for (banned in banneds) {
 
         for (s in set) {
-            if(isPosible(s,banned)){
+            if(isPosible(s, banned)){
                 success++
                 set.remove(s)
                 break
@@ -172,7 +179,7 @@ fun isPosible(users : Array<String>, banneds : Array<String>) : Boolean{
     for (banned in banneds) {
 
         for (s in set) {
-            if(isPosible(s,banned)){
+            if(isPosible(s, banned)){
                 success++
                 set.remove(s)
                 break

@@ -1,4 +1,4 @@
-import java.util.*
+package kakao
 
 class Kakao2020_1 {
     private val numPos = hashMapOf<Int, IntArray>().apply {

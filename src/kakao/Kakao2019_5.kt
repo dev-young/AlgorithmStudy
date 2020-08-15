@@ -1,3 +1,5 @@
+package kakao
+
 import java.util.*
 import kotlin.system.measureTimeMillis
 
@@ -135,18 +137,18 @@ class Kakao2019_5{
 fun main() {
     val s = Kakao2019_5()
 //    println(s.solution2(intArrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 3, 2, 1, 4, 4, 4, 4, 4, 4, 4, 2, 5, 1), 6))
-//    println(s.solution(intArrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 3, 2, 1, 4, 4, 4, 4, 4, 4, 4, 2, 5, 1), 6))
+//    println(s.kakao.solution(intArrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 3, 2, 1, 4, 4, 4, 4, 4, 4, 4, 2, 5, 1), 6))
 
 
 //    println(s.solution2(intArrayOf(3, 2, 2, 8, 1), 4))
-//    println(s.solution(intArrayOf(3, 2, 2, 8, 1), 4))
+//    println(s.kakao.solution(intArrayOf(3, 2, 2, 8, 1), 4))
 
 
 //    println(s.solution2(intArrayOf(6, 1, 9, 6, 5), 1))
-//    println(s.solution(intArrayOf(6, 1, 9, 6, 5), 1))
+//    println(s.kakao.solution(intArrayOf(6, 1, 9, 6, 5), 1))
 
 //    println(s.solution2(intArrayOf(9,2,1,8,3),2))
-//    println(s.solution(intArrayOf(9,2,1,8,3),2))
+//    println(s.kakao.solution(intArrayOf(9,2,1,8,3),2))
 
     for(i in 1 .. 1){
         val random = Random()
@@ -161,7 +163,7 @@ fun main() {
 //            println()
 //
 //            println(intArray.contentToString())
-//            val r1 = s.solution(intArray.clone(), k)
+//            val r1 = s.kakao.solution(intArray.clone(), k)
 //            println()
 //            println(intArray.contentToString())
 //            val r2 = s.solution2(intArray.clone(), k)
@@ -175,10 +177,10 @@ fun main() {
     }
 
 
-//    println(Kakao2019_5().solution2(intArrayOf(2, 4, 5, 3, 2), 2))
-//    println(Kakao2019_5().solution(intArrayOf(2, 4, 5, 3, 2), 2))
-//    println(Kakao2019_5().solution2(intArrayOf(5, 8, 5, 2, 6, 2), 3))
-//    println(Kakao2019_5().solution(intArrayOf(5, 8, 5, 2, 6, 2), 3))
+//    println(kakao.Kakao2019_5().solution2(intArrayOf(2, 4, 5, 3, 2), 2))
+//    println(kakao.Kakao2019_5().kakao.solution(intArrayOf(2, 4, 5, 3, 2), 2))
+//    println(kakao.Kakao2019_5().solution2(intArrayOf(5, 8, 5, 2, 6, 2), 3))
+//    println(kakao.Kakao2019_5().kakao.solution(intArrayOf(5, 8, 5, 2, 6, 2), 3))
 }
 
 
