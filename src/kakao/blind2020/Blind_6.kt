@@ -1,6 +1,6 @@
 package kakao.blind2020
 
-class Blind0912_5 {
+class Blind_6 {
     fun solution(): String {
         var answer : String = ""
 
@@ -8,10 +8,11 @@ class Blind0912_5 {
 
         return answer
     }
+
 }
 
 fun main() {
-    val s = Blind0912_5()
+    val s = Blind_6()
     val r = s.solution()
     println(r)
 }

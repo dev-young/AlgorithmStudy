@@ -1,4 +1,4 @@
-package kakao.blind2020
+package kakao.blind2021
 
 class Blind0912_7 {
     fun solution(sales: IntArray, links: Array<IntArray>): Int {

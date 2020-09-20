@@ -1,4 +1,4 @@
-package kakao.blind2020
+package kakao.blind2021
 
 class Blind0912_3 {
     fun solution(info: Array<String>, query: Array<String>): IntArray {
