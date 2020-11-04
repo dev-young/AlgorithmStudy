@@ -11,6 +11,10 @@ class KotlinTest {
             it.value = 0
         }
         println(alist.toString())
+
+        val a = arrayOf("1234", "1235", "1236")
+        a.sort()
+        println(a.contentToString())
     }
 
 }
