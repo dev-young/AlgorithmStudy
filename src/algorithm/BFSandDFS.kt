@@ -2,6 +2,7 @@ package algorithm
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 /**간선의 수가 적은 희소그래프일 경우 인접행렬보다 인접리스트를 사용하는것이 유리
@@ -14,7 +15,7 @@ class BFSandDFS {
         val graph = hashMapOf<T, HashSet<T>>()
 
         fun setVertex(v: T) {
-            if(!graph.containsKey(v)){
+            if (!graph.containsKey(v)) {
                 graph[v] = hashSetOf()
             }
         }
@@ -29,7 +30,7 @@ class BFSandDFS {
             graph.computeIfAbsent(from) { hashSetOf() }.add(to)
         }
 
-        fun printGraph(){
+        fun printGraph() {
             graph.forEach { t, u ->
                 println("$t -> $u")
             }
@@ -92,19 +93,13 @@ class BFSandDFS {
         var level = 0
         while (!que.isEmpty()) {
             val qSize = que.size
-            for (n in 1..qSize) {
+            for (n in 1..qSize) {       //level을 알기 위해 반복문을 하나 더 사용한다.
                 val i = que.poll()
                 if (visited.contains(i)) continue
                 visited.add(i)
                 println("방문 노드:$i  level:$level")
-//            for (j in i until arr.size) //방향성이 없는 경우 // TODO: 테스트 필요
                 for (j in graph[i]!!) {
-                    if (graph[i]!!.contains(j) &&   /*간선이 존재하는경우*/
-                        i != j &&           /*자기 자신이 아닌 경우*/
-                        !visited.contains(j)         /*방문한적이 없는 경우*/
-                    ) {
-                        que.offer(j)
-                    }
+                    que.offer(j)
                 }
             }
             level++
@@ -135,6 +130,7 @@ class BFSandDFS {
 
     }
 
+    /**인접행렬 사용*/
     private fun dfs(arr: Array<IntArray>, visited: BooleanArray, i: Int) {
         visited[i] = true
         println("탐색된 노드:$i")
@@ -149,6 +145,19 @@ class BFSandDFS {
         }
     }
 
+    /**인접리스트 사용*/
+    private fun dfs(graph: ListGraph<Int>, i: Int, visited: HashSet<Int> = hashSetOf()) {
+        visited.add(i)
+        println("탐색된 노드:$i")
+        graph.graph[i]?.forEach { j->
+            if (!visited.contains(j) /*방문하지 않았을 경우*/
+            ) {
+                /*노드 j가 노드 i에 연결되어있음*/
+                dfs(graph, j, visited)
+            }
+        }
+    }
+
     private fun dfsTest() {
         val arr = arrayOf(
             intArrayOf(1, 1, 0, 1, 1),
@@ -158,8 +167,18 @@ class BFSandDFS {
             intArrayOf(0, 0, 0, 0, 1))
 
         val visited = BooleanArray(arr.size) { false }
-
         dfs(arr, visited, 0)
+
+        println("인접리스트로 표현")
+        val listGraph = ListGraph<Int>()
+        arr.forEachIndexed { i, ints ->
+            ints.forEachIndexed { j, int ->
+                if (int == 1)
+                    listGraph.addEdge(i, j)
+            }
+        }
+//        listGraph.printGraph()
+        dfs(listGraph, 0)
     }
 
     /**모든 노드를 방문하는 경로 탐색
@@ -235,8 +254,8 @@ class BFSandDFS {
         @JvmStatic
         fun main(args: Array<String>) {
             val test = BFSandDFS()
-            test.bfsTest()
-
+//            test.bfsTest()
+            test.dfsTest()
         }
     }
 }
