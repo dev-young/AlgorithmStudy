@@ -233,6 +233,54 @@ class BFSandDFS {
         return answers
     }
 
+    fun pathVisitedAll(graph: ListGraph<Int>, root: Int = 0): ArrayList<IntArray> {
+        //간선 리스트 {출발지, 도착지}
+        val pathList = arrayListOf<IntArray>().let {
+            graph.graph.forEach { start, u ->
+                u.forEach {  end->
+                    it.add(intArrayOf(start, end))
+                }
+            }
+            it.toTypedArray()
+        }
+        val visited = BooleanArray(pathList.size) { false }
+
+        pathList.forEach { println(it.contentToString()) }
+
+        val answers = arrayListOf<IntArray>()
+        val destinations = arrayListOf<Int>().apply { add(root) }
+        fun pathVisitedAll(i: Int, visited: BooleanArray = BooleanArray(pathList.size) { false }) {
+//        println("탐색된 노드:$i, ${arr[i].contentToString()}")
+            visited[i] = true
+            destinations.add(pathList[i][1])
+            if (destinations.size == pathList.size + 1) {
+                if (!visited.contains(false))
+                    answers.add(destinations.toIntArray())
+//                return    //리턴할경우 한개의 결과만 찾고 더이상 찾지 않는다.
+            } else {
+                for (j in pathList.indices) {
+                    if (!visited[j]      /*방문하지 않았을 경우*/
+                        && pathList[i][1] == pathList[j][0]     /*간선이 존재하는 경우*/
+                        && i != j   /*자기 자신이 아닐때*/
+                    ) {
+                        /*노드 j가 노드 i에 연결되어있음*/
+                        pathVisitedAll(j, visited)
+                    }
+                }
+            }
+            visited[i] = false
+            destinations.removeAt(destinations.lastIndex)
+        }
+
+        pathList.forEachIndexed { index, ints ->
+            if (root == ints[0])
+                pathVisitedAll(index, visited)
+        }
+
+
+        return answers
+    }
+
     fun pathVisitedAllTest() {
         val arr = arrayOf(
             intArrayOf(1, 1, 1),
