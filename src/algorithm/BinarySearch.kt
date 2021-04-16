@@ -64,6 +64,53 @@ class BinarySearch {
         return mid
     }
 
+    /**오름차순으로 정렬된 배열에서 최초로 search 이상의 값이 나오는 인덱스 반환
+     * 배열 내에 이상인 값이 없으면 -1 반환 */
+    fun findFirstBig(sortedList: List<Int>, search: Int): Int {
+        var low = 0
+        var high = sortedList.size
+        var mid = (low + high) / 2
+
+        if (search < sortedList.first()) return 0
+
+        while (low < high) {
+            if (sortedList[mid] < search) {
+                low = mid + 1
+            } else {
+                if(mid>0 && sortedList[mid-1] < search)
+                    break
+                high = mid - 1
+            }
+            mid = (low + high) / 2
+        }
+        if (mid == sortedList.size) return -1
+        return mid
+    }
+
+    /**오름차순으로 정렬된 배열에서 search 이하의 값들 중 제일 마지막 인덱스 반환
+     * 배열 내에 이하인 값이 없으면 -1 반환 */
+    fun findLastSmall(sortedList: List<Int>, search: Int): Int {
+        var low = 0
+        var high = sortedList.size
+        var mid = (low + high) / 2
+
+        if (search >= sortedList.last()) return sortedList.lastIndex
+        if (search < sortedList.first()) return -1
+
+        while (low < high) {
+            if (sortedList[mid] > search) {
+                high = mid - 1
+            } else {
+                if(sortedList[mid+1] > search)
+                    break
+                low = mid + 1
+            }
+            mid = (low + high) / 2
+        }
+//        if (mid == sortedList.size) return -1
+        return mid
+    }
+
     fun findFirstTest() {
         val list = arrayListOf(0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 7, 8, 9)
         println(findFirst(list, -1))
@@ -164,8 +211,16 @@ class BinarySearch {
         @JvmStatic
         fun main(args: Array<String>) {
             val test = BinarySearch().apply {
-                val list = arrayListOf(10, 20, 40, 50, 60, 65)
-                println(search(list, 40))
+//                val list = arrayListOf(10, 40, 50, 60, 65)
+//                val list = arrayListOf(10,30,30,30,40,40,40,50)
+                val list = arrayListOf(50)
+                println(findFirstBig(list, 30))
+                println(findFirstBig(list, 20))
+                println(findFirstBig(list, 10))
+                println(findFirstBig(list, 0))
+                println(findFirstBig(list, 35))
+                println(findFirstBig(list, 40))
+                println(findFirstBig(list, 60))
             }
 //            test.searchTest()
 //            println()
