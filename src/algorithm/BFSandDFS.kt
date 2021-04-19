@@ -37,6 +37,40 @@ class BFSandDFS {
         }
     }
 
+    /**2차원 좌표계에서 시작(x1y1)과 끝(x2y2)이 주어졌을 때 최소 이동 거리 구하기
+     * 이동할 수 없는경우 -1 리턴 */
+    private val delta = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(1, 0))   //상하좌우
+    private fun bfsOnBoard(board: Array<IntArray>, r1: Int, c1: Int, r2: Int, c2: Int): Int {
+        var moveCount = -1
+        val visited = Array(board.size) { BooleanArray(board.size) { false } }
+        val que: Queue<Pair<Int, Int>> = LinkedList()
+        que.offer(Pair(r1, c1))
+        while (!que.isEmpty()) {
+            val point = que.poll()
+            if (visited[point.first][point.second]) continue
+
+            visited[point.first][point.second] = true
+            println("방문 좌표:${point.first},${point.second}")
+            moveCount++
+            if (point.first == r2 && point.second == c2) return moveCount
+            for (d in delta) {
+                val nr = point.first + d[0]
+                val nc = point.second + d[1]
+                /**방문한적이 없고 보드 범위 내에 있는 경우*/
+                if (!visited[nr][nc] && nr in board.indices && nc in board[0].indices ) {
+                    /**막힌 벽인지 등의 추가적인 조건은 이곳에 적용*/
+                    que.offer(Pair(nr,nc))
+                }
+
+            }
+        }
+        return -1
+    }
+
+    fun bfsOnBoardTest() {
+
+    }
+
     private fun bfs(arr: Array<IntArray>, root: Int = 0) {
         val visited = BooleanArray(arr.size) { false }
         val que: Queue<Int> = LinkedList()
@@ -49,8 +83,8 @@ class BFSandDFS {
 //            for (j in i until arr.size) //방향성이 없는 경우 // TODO: 테스트 필요
             for (j in arr.indices) {
                 if (arr[i][j] == 1 &&   /*간선이 존재하는경우*/
-                    i != j &&           /*자기 자신이 아닌 경우*/
-                    !visited[j]         /*방문한적이 없는 경우*/
+                        i != j &&           /*자기 자신이 아닌 경우*/
+                        !visited[j]         /*방문한적이 없는 경우*/
                 ) {
                     que.offer(j)
                 }
@@ -73,8 +107,8 @@ class BFSandDFS {
 //            for (j in i until arr.size) //방향성이 없는 경우 // TODO: 테스트 필요
                 for (j in arr.indices) {
                     if (arr[i][j] == 1 &&   /*간선이 존재하는경우*/
-                        i != j &&           /*자기 자신이 아닌 경우*/
-                        !visited[j]         /*방문한적이 없는 경우*/
+                            i != j &&           /*자기 자신이 아닌 경우*/
+                            !visited[j]         /*방문한적이 없는 경우*/
                     ) {
                         que.offer(j)
                     }
@@ -109,11 +143,11 @@ class BFSandDFS {
 
     private fun bfsTest() {
         val arr = arrayOf(
-            intArrayOf(1, 1, 0, 1, 1),
-            intArrayOf(0, 1, 1, 0, 1),
-            intArrayOf(0, 0, 1, 0, 1),
-            intArrayOf(0, 0, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 1))
+                intArrayOf(1, 1, 0, 1, 1),
+                intArrayOf(0, 1, 1, 0, 1),
+                intArrayOf(0, 0, 1, 0, 1),
+                intArrayOf(0, 0, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 1))
 
         bfsPrintLevel(arr)
 
@@ -136,8 +170,8 @@ class BFSandDFS {
         println("탐색된 노드:$i")
         for (j in arr.indices) {
             if (!visited[j] &&      /*방문하지 않았을 경우*/
-                arr[i][j] == 1 &&   /*간선이 존재하는 경우*/
-                i != j              /*자기 자신이 아닌 경우*/
+                    arr[i][j] == 1 &&   /*간선이 존재하는 경우*/
+                    i != j              /*자기 자신이 아닌 경우*/
             ) {
                 /*노드 j가 노드 i에 연결되어있음*/
                 dfs(arr, visited, j)
@@ -149,7 +183,7 @@ class BFSandDFS {
     private fun dfs(graph: ListGraph<Int>, i: Int, visited: HashSet<Int> = hashSetOf()) {
         visited.add(i)
         println("탐색된 노드:$i")
-        graph.graph[i]?.forEach { j->
+        graph.graph[i]?.forEach { j ->
             if (!visited.contains(j) /*방문하지 않았을 경우*/
             ) {
                 /*노드 j가 노드 i에 연결되어있음*/
@@ -160,11 +194,11 @@ class BFSandDFS {
 
     private fun dfsTest() {
         val arr = arrayOf(
-            intArrayOf(1, 1, 0, 1, 1),
-            intArrayOf(0, 1, 1, 0, 1),
-            intArrayOf(0, 0, 1, 0, 1),
-            intArrayOf(0, 0, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 1))
+                intArrayOf(1, 1, 0, 1, 1),
+                intArrayOf(0, 1, 1, 0, 1),
+                intArrayOf(0, 0, 1, 0, 1),
+                intArrayOf(0, 0, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 1))
 
         val visited = BooleanArray(arr.size) { false }
         dfs(arr, visited, 0)
@@ -213,8 +247,8 @@ class BFSandDFS {
             }
             for (j in arr.indices) {
                 if (!visited[j]      /*방문하지 않았을 경우*/
-                    && arr[i][1] == arr[j][0]     /*간선이 존재하는 경우*/
-                    && i != j   /*자기 자신이 아닐때*/
+                        && arr[i][1] == arr[j][0]     /*간선이 존재하는 경우*/
+                        && i != j   /*자기 자신이 아닐때*/
                 ) {
                     /*노드 j가 노드 i에 연결되어있음*/
                     pathVisitedAll(arr, j, visited)
@@ -237,7 +271,7 @@ class BFSandDFS {
         //간선 리스트 {출발지, 도착지}
         val pathList = arrayListOf<IntArray>().let {
             graph.graph.forEach { start, u ->
-                u.forEach {  end->
+                u.forEach { end ->
                     it.add(intArrayOf(start, end))
                 }
             }
@@ -260,8 +294,8 @@ class BFSandDFS {
             } else {
                 for (j in pathList.indices) {
                     if (!visited[j]      /*방문하지 않았을 경우*/
-                        && pathList[i][1] == pathList[j][0]     /*간선이 존재하는 경우*/
-                        && i != j   /*자기 자신이 아닐때*/
+                            && pathList[i][1] == pathList[j][0]     /*간선이 존재하는 경우*/
+                            && i != j   /*자기 자신이 아닐때*/
                     ) {
                         /*노드 j가 노드 i에 연결되어있음*/
                         pathVisitedAll(j, visited)
@@ -283,9 +317,9 @@ class BFSandDFS {
 
     fun pathVisitedAllTest() {
         val arr = arrayOf(
-            intArrayOf(1, 1, 1),
-            intArrayOf(1, 1, 0),
-            intArrayOf(1, 0, 1))
+                intArrayOf(1, 1, 1),
+                intArrayOf(1, 1, 0),
+                intArrayOf(1, 0, 1))
 
         val result = pathVisitedAll(arr)
         result.forEach {

@@ -3,8 +3,8 @@ package algorithm
 import java.util.*
 import kotlin.collections.HashMap
 
-/***/
-class Dijkstra {
+/**플로이드 와샬 알고리즘*/
+class Floyd {
 
     //인접리스트 가중치 그래프
     class AdjacencyList<T, U> {
@@ -35,7 +35,7 @@ class Dijkstra {
 
     /**가중치 인접리스트를 이용한 다익스트라 알고리즘
      * @param from <key노드, key노드까지 도달하는 최단경로의 직전 노드> */
-    fun <T> dijkstra(graph:AdjacencyList<T, Int>, start:T, from:HashMap<T, T> = hashMapOf()): HashMap<T, Int> {
+    fun <T> floyd(graph:AdjacencyList<T, Int>, start:T, from:HashMap<T, T> = hashMapOf()): HashMap<T, Int> {
         val inf = Int.MAX_VALUE
         val minDistance = hashMapOf<T, Int>()
         graph.adj.keys.forEach {
@@ -80,7 +80,26 @@ class Dijkstra {
         return result.reversed()
     }
 
-    fun dijkstraTest(){
+
+    /**인접행렬을 사용한 플로이드 알고리즘 */
+    fun floyd(arr:Array<IntArray>): Array<IntArray> {
+        val inf = Int.MAX_VALUE
+        val result = arr.clone()
+        for (i in arr.indices) {
+            for (j in arr.indices)
+                for (k in arr.indices) {
+                    if (arr[j][i] == inf || arr[i][k] == inf) continue
+                    if(result[j][k] > result[j][i] + result[i][k])
+                        result[j][k] = result[j][i] + result[i][k]
+                }
+        }
+        return result
+    }
+
+
+
+
+    fun test(){
         val graph = AdjacencyList<Int, Int>()
         graph.addSingleEdge(1, 2, 2)
         graph.addSingleEdge(1,3,5)
@@ -104,7 +123,7 @@ class Dijkstra {
         graph.addSingleEdge(6,5,2)
 
         val from = hashMapOf<Int, Int>()
-        println(dijkstra(graph, 1, from))
+        println(floyd(graph, 1, from))
 
         println(getPath(from, 3))
         println(getPath(from, 5))
@@ -118,8 +137,9 @@ class Dijkstra {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val test = Dijkstra()
-            test.dijkstraTest()
+            Floyd().apply {
+                test()
+            }
 
         }
     }

@@ -27,6 +27,28 @@ class PowerSet {
         return result
     }
 
+    fun powerSet(size:Int): MutableList<IntArray> {
+        val result = mutableListOf<IntArray>()
+        fun powerSet(visited: BooleanArray, n: Int, idx: Int) {
+            if (idx == n) {
+//            print(arr, visited, n)
+                val temp = mutableListOf<Int>()
+                visited.forEachIndexed { index, b ->
+                    if(b) temp.add(index)
+                }
+                result.add(temp.toIntArray())
+                return
+            }
+            visited[idx] = false
+            powerSet(visited, n, idx + 1)
+            visited[idx] = true
+            powerSet(visited, n, idx + 1)
+        }
+
+        powerSet(BooleanArray(size), size, 0)
+        return result
+    }
+
 
 
 
@@ -40,6 +62,7 @@ class PowerSet {
 
             powerSet.powerSet(arr).forEach { println(it.contentToString()) }
             println()
+            powerSet.powerSet(4).forEach { println(it.contentToString()) }
 
 
 

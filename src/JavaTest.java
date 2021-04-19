@@ -9,6 +9,8 @@ public class JavaTest {
 
         int[][] ints = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
         String[][] strs = {{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}};
+
+        String.format("%02d:%02d:%02d", 1,2,3);
     }
 
 }
