@@ -1,5 +1,9 @@
 package algorithm
 
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
+
 class Tree {
 
     /**@param v 노드 번호 (정점)
@@ -63,6 +67,35 @@ class Tree {
         }
         dfs(start)
         return Pair(maxNode, maxSum)
+    }
+
+    /**start 노드로부터 각 정점간의 거리를 배열의 형태로 반환한다. (bfs 사용)  ex) dist[3] -> start노드에서 3번노드까지의 거리(가중치합)
+     * @param edges n번 노드와 연결된 노드들의 집합, 연결된 노드는 Pair<노드번호, 가중치> 형태로 저장*/
+    fun getMaxLength2(edges: Array<HashSet<Pair<Int,Int>>>, start: Int): IntArray {
+        val visited = BooleanArray(edges.size+1) { false }
+        val dist = IntArray(edges.size+1)
+        val que : Queue<Int> = LinkedList()
+        que.offer(0)
+        while (que.isNotEmpty()) {
+            val node = que.poll()
+            visited[node] = true
+            for (pair in edges[node]) {
+                if(visited[pair.first] || node == pair.first) continue
+                que.offer(pair.first)
+                dist[pair.first] = dist[node] + pair.second
+            }
+        }
+
+        var maxDist = 0 //최대거리
+        var maxNode = start //최대거리인 노드 번호
+        dist.forEachIndexed { index, i ->
+            if (maxDist < i ) {
+                maxDist = i
+                maxNode = index
+            }
+        }
+
+        return dist
     }
 
 

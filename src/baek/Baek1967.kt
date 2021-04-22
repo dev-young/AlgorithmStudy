@@ -5,6 +5,7 @@ import java.io.InputStreamReader
 
 //트리의 지름 (트리)
 class Baek1967 {
+    /**개인적으로 트리의 지름을 가장 이해하기 쉽게 설명한 글 : https://yabmoons.tistory.com/597*/
     fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
         val n = readLine().toInt()
         val edges = Array(n + 1) { hashSetOf<Pair<Int, Int>>() }
