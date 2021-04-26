@@ -1,7 +1,5 @@
 package algorithm
 
-import baek.getResult
-
 class PowerSet {
 
     /**부분집합 구하기*/
@@ -49,8 +47,21 @@ class PowerSet {
         return result
     }
 
-
-
+    /**비트연산을 통해 부분집합 구하기*/
+    fun withBit(arr:IntArray) : ArrayList<IntArray>{
+        val n = arr.size
+        val res = arrayListOf<IntArray>()
+        for (i in 0 until (1 shl n)) {
+            val temp = arrayListOf<Int>()
+            for (j in 0 until n) {
+                if (i and (1 shl j) != 0) {
+                    temp.add(arr[j])
+                }
+            }
+            res.add(temp.toIntArray())
+        }
+        return res
+    }
 
 
     //테스트
@@ -59,11 +70,11 @@ class PowerSet {
         fun main(args: Array<String>) {
             val powerSet = PowerSet()
             val arr = intArrayOf(1, 2, 3)
-
             powerSet.powerSet(arr).forEach { println(it.contentToString()) }
             println()
             powerSet.powerSet(4).forEach { println(it.contentToString()) }
-
+            println()
+            powerSet.withBit(arr).forEach { println(it.contentToString()) }
 
 
         }

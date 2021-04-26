@@ -11,6 +11,10 @@ public class JavaTest {
         String[][] strs = {{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}};
 
         String.format("%02d:%02d:%02d", 1,2,3);
+
+        for (int i=2 ; i*i <=100 ; i++){
+
+        }
     }
 
 }

@@ -47,6 +47,40 @@ class Tree {
         return tree
     }
 
+    /**정점이 너무 많아 재귀호출에 제한이 걸릴 경우 스택을 사용하여 재귀호출 하듯이 탐색할 수 있다.
+     * @param edges 간선 정보 (부모/자식 개념 없이 모든 간선 포함)
+     * ex) edges[1] = {2,3,4} -> 1번 정점에 연결된 정점은 2,3,4번
+     *
+     * @param root 루트로 정할 노드
+     *
+     * @param tree 완성되었을때 반횐될 트리
+     *
+     * @return Node 담겨진 트리 반환 (최상위 노드는 자신의 번호와 부모의 번호가 같다.)
+     * */
+    fun makeTreeWithStack(edges: Array<HashSet<Int>>, root: Int, tree: HashMap<Int, Node> = hashMapOf()): HashMap<Int, Node> {
+        val visited = hashSetOf<Int>()
+        val stack = Stack<Pair<Int, Int>>()
+        stack.push(Pair(root, root))
+        while (stack.isNotEmpty()) {
+            val (node, parent) = stack.pop()
+            if(visited.contains(node)) {
+                tree[parent]?.child?.add(node)
+                /**리프노드*/
+                println(node)
+                continue
+            }
+            visited.add(node)
+            tree[node] = Node(node, parent)
+            stack.push(Pair(node, parent))
+            for (e in edges[node]) {
+                if(visited.contains(e)) continue
+                stack.push(Pair(e, node))
+            }
+        }
+
+        return tree
+    }
+
     /**start 노드로부터 가장 먼 거리의 노드와 그 거리를 반환한다.
      * @param edges n번 노드와 연결된 노드들의 집합, 연결된 노드는 Pair<노드번호, 가중치> 형태로 저장*/
     fun getMaxLength(edges: Array<HashSet<Pair<Int,Int>>>, start: Int): Pair<Int, Int> {

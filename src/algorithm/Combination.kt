@@ -40,6 +40,27 @@ class Combination {
         }
     }
 
+    /**@param n 배열 크기 ex) n==4 -> {0,1,2,3} 중에서 r개 뽑는다.
+     * @param r 뽑을 갯수*/
+    fun combination(n: Int, r:Int): ArrayList<IntArray> {
+        val visited = hashSetOf<Int>()
+        val result = arrayListOf<IntArray>()
+        fun comb(i:Int){
+            if (i == n) return
+            if(visited.size == r) {
+                val temp = visited.map { it }.toIntArray()
+                println(temp.contentToString())
+                return
+            }
+            visited.add(i+1)
+            comb(i+1)
+            visited.remove(i+1)
+            comb(i+1)
+        }
+        comb(-1)
+        return result
+    }
+
     fun combination(arr: IntArray, r: Int): ArrayList<IntArray> {
         val result = arrayListOf<IntArray>()
         combination(arr, r, result)
@@ -58,6 +79,7 @@ class Combination {
             per.combination(arr, 2).forEach { println(it.contentToString()) }
             println()
 
+            per.combination(1, 4)
 
 
         }
