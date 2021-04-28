@@ -1,44 +1,52 @@
 package kakao.blind2021
 
+//https://programmers.co.kr/learn/courses/30/lessons/64064
 class Kakao2019_3 {
     fun solution(user_id: Array<String>, banned_id: Array<String>): Int {
-        val bannedAvailableMap = banned_id.map { banned->
-            user_id.filter { check(it, banned) }
-        }
-        val answerSet = hashSetOf<String>()
-        val  visited = hashSetOf<String>()
-        fun loop(startIndex:Int = 0){
-            if(startIndex == banned_id.size) {
-                if(visited.size == banned_id.size) answerSet.add(visited.sorted().toString())
-                return
-            }
-
-            for (id in bannedAvailableMap[startIndex]) {
-                if(!visited.contains(id)){
-                    visited.add(id)
-                    loop(startIndex+1)
-                    visited.remove(id)
+        val availables = Array(banned_id.size){ hashSetOf<Int>()}
+        banned_id.forEachIndexed { index, banned ->
+            out@for (i in user_id.indices) {
+                val id = user_id[i]
+                if(banned.length == id.length) {
+                    for (i in id.indices) {
+                        if(banned[i] == '*') continue
+                        if(banned[i] != id[i]) continue@out
+                    }
+                    availables[index].add(i)
                 }
             }
         }
-        loop()
-        return answerSet.size
-    }
 
-    fun check(userId: String, bannedId: String): Boolean {
-        if (userId.length != bannedId.length) return false
-        for (i in userId.indices) {
-            if (userId[i] != bannedId[i] && bannedId[i] != '*')
-                return false
+        val bannedSet = hashSetOf<Int>()
+        val res = hashSetOf<String>()
+        fun dfs(n :Int) {
+            if(n == banned_id.size) {
+                res.add(bannedSet.joinToString(" "))
+                return
+            }
+            for (i in availables[n]) {
+                if(bannedSet.contains(i)) continue
+                bannedSet.add(i)
+                dfs(n+1)
+                bannedSet.remove(i)
+            }
         }
-        return true
+        dfs(0)
+
+        return res.size
     }
 
-}
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val s = Kakao2019_3()
+//            val r = s.solution(arrayOf("frodo", "fradi", "crodo", "abc123", "frodoc"),
+//                    arrayOf("fr*d*", "abc1**"))
+            val r = s.solution(arrayOf("frodo", "fradi", "crodo", "abc123", "frodoc"),
+                    arrayOf("fr*d*", "*rodo", "******", "******"))
+            println(r)
 
-fun main() {
-    val s = Kakao2019_3()
-    val r = s.solution(arrayOf("frodo", "fradi", "crodo", "abc123", "frodoc"),
-        arrayOf("fr*d*", "*rodo", "******", "******"))
-    println(r)
+        }
+    }
 }
+// 걸린 시간(분): 36

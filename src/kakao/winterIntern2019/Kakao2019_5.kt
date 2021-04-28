@@ -4,16 +4,14 @@ package kakao.winterIntern2019
 class Kakao2019_5 {
 
     fun solution(stones: IntArray, k: Int): Int {
-        fun isAvailable(n: Int): Boolean {
-            val d = n - 1
-            var term = 0
-            for (s in stones) {
-                val stone = s - d
-
-                if (stone > 0) term = 0
-                else term++
-
-                if (term == k)
+        fun check(n:Int):Boolean {
+            var empty = 0
+            for (i in stones.indices) {
+                if(stones[i]-n+1 > 0)
+                    empty = 0
+                else
+                    empty++
+                if(empty == k)
                     return false
             }
             return true
@@ -21,27 +19,19 @@ class Kakao2019_5 {
 
         var low = 1
         var high = 200000000
-        var mid = 0
-        var lastR = false
-        while (low < high) {
-            mid = (low + high) / 2
-            lastR = isAvailable(mid)
-            if (lastR) {
-                low = mid + 1
-            } else {
-                high = mid - 1
-            }
-        }
+        var mid = (low + high) / 2
 
-        if(lastR) {
-            while (isAvailable(mid+1)){
-                mid++
+        while (low < high) {
+            if (!check(mid)) {
+                high = mid - 1
+            } else {
+                if(!check(mid+1))
+                    break
+                low = mid + 1
             }
-        } else {
-            while (!isAvailable(--mid)){}
+            mid = (low + high) / 2
         }
-        return if(mid<1) 1
-        else mid
+        return mid
     }
 
     companion object {
@@ -54,4 +44,4 @@ class Kakao2019_5 {
         }
     }
 }
-// 걸린 시간: 122분
+// 걸린 시간(분): 29
