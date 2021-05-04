@@ -4,111 +4,40 @@ package kakao.blind2019
 class KakaoB19_3 {
 
     fun solution(relation: Array<Array<String>>): Int {
-
-        val answerList = arrayListOf<IntArray>()
-        val set = arrayListOf<Int>().apply {
-            for (i in relation[0].indices) add(i)
-        }.toIntArray().powerSet()
-        set.sortBy { it.size }
-        set.removeAt(0)
-        set.dropLast(1)
-
-        set.forEach { cols ->
-            val keySet = hashSetOf<String>()
+        var answer = 0
+        val n = relation[0].size
+        val res = arrayListOf<IntArray>()
+        for (i in 0 until (1 shl n)) {
+            val temp = arrayListOf<Int>()
+            for (j in 0 until n) {
+                if (i and (1 shl j) != 0) {
+                    temp.add(j)
+                }
+            }
+            res.add(temp.toIntArray())
+        }
+        res.sortBy { it.size }
+        val answerKeySet = arrayListOf<Set<Int>>()
+        out@for (keys in res) {
+            val cur = keys.toSet()
+            for (aSet in answerKeySet) {
+                if(aSet.size >= cur.size) continue
+                if(cur.containsAll(aSet)) continue@out
+            }
+            val rowSet = hashSetOf<String>()
             for (row in relation) {
-                var key = ""
-                cols.forEach { key += "${row[it]} " }
-                if (keySet.contains(key))
-                    break
-                keySet.add(key)
-            }
-
-            if (keySet.size == relation.size) { //유일성 체크
-                var minimality = true
-                for (ans in answerList) {
-                    if (checkPowerSet(cols, ans)){
-                        minimality = false
-                        break
-                    }
+                var s = ""
+                keys.forEach { key->
+                    s += row[key]
                 }
-
-                //최소성을 충족하는 경우
-                if (minimality)
-                    answerList.add(cols)
+                if (rowSet.contains(s)) continue@out
+                rowSet.add(s)
             }
+            answerKeySet.add(cur)
+            answer++
         }
 
-        return answerList.size
-    }
-
-    fun checkPowerSet(parent: IntArray, child: IntArray): Boolean {
-        for (c in child) {
-            if(!parent.contains(c))
-                return false
-        }
-        return true
-    }
-
-
-    fun IntArray.powerSet(): MutableList<IntArray> {
-        val result = mutableListOf<IntArray>()
-        tailrec fun ps(arr: IntArray, visited: BooleanArray, n: Int, idx: Int) {
-            if (idx == n) {
-//            print(arr, visited, n)
-                val temp = mutableListOf<Int>()
-                visited.forEachIndexed { index, b ->
-                    if (b) temp.add(arr[index])
-                }
-                result.add(temp.toIntArray())
-                return
-            }
-            visited[idx] = false
-            ps(arr, visited, n, idx + 1)
-            visited[idx] = true
-            ps(arr, visited, n, idx + 1)
-        }
-
-        ps(this, BooleanArray(size), size, 0)
-        return result
-    }
-
-    /**다른사람이 푼 깔끔한 풀이 (방법은 같으나 문법이 넘 깔끔하다. )*/
-    fun solution2(relation: Array<Array<String>>): Int {
-
-        fun <T> List<T>.powerSet(): List<List<T>> {
-            var r = listOf(emptyList<T>())
-            tailrec fun recursive(ll: List<T>) {
-                if (ll.isEmpty())
-                    return
-                r = r.flatMap { listOf(it + ll.first(), it) }
-                return recursive(ll.drop(1))
-            }
-
-            recursive(this)
-            return r.toList()
-        }
-
-        val columnSize = relation.first().size
-        val tupleSize = relation.size
-        val powerSets = (1..columnSize).toList().powerSet().dropLast(1).sortedBy { it.size }
-
-        val candidateKey = mutableListOf<List<Int>>()
-
-        fun <T> List<T>.isPartOf(l: List<T>): Boolean = all { it in l }
-
-        return powerSets.filter { set ->
-            if (candidateKey.any { it.isPartOf(set) })
-                false
-            else {
-                val keys = relation.map { tuple -> set.fold("") { acc, i -> acc + tuple[i - 1] } }
-
-                if (keys.distinct().size == tupleSize) {
-                    candidateKey.add(set)
-                    true
-                } else
-                    false
-            }
-        }.size
+        return answer
     }
 
 
@@ -127,4 +56,4 @@ class KakaoB19_3 {
         }
     }
 }
-// 걸린 시간: 90분
+// 걸린 시간: 30분

@@ -1,79 +1,72 @@
 package kakao.blind2019
 
-//https://programmers.co.kr/learn/courses/30/lessons/42893?language=kotlin
+
+//https://programmers.co.kr/learn/courses/30/lessons/42892?language=kotlin
 class KakaoB19_5 {
 
-    data class WebPage(val id: Int, val html: String, val searchWord: String) {
-        val url: String
-        val words = arrayListOf<String>()
-        val links = arrayListOf<String>()
-        val baseScore: Double
-        var matchingScore: Double
-
-        companion object {
-            val baseUrlRegex = Regex("<meta property=.* content=\".*\"")
-            val linkRegex = Regex("<a href=\".*?\"")
-            val wordSplit = Regex("[a-z]+", RegexOption.IGNORE_CASE)
-        }
-
-        init {
-            val searchWordLower = searchWord.toLowerCase()
-
-            var url = ""
-            baseUrlRegex.find(html)?.value?.let {
-                url = it.substring(33, it.length - 1)
-            }
-            this.url = url
-            words.addAll(wordSplit.findAll(html).map { it.value.toLowerCase() })
-            links.addAll(linkRegex.findAll(html).map { it.value.substring(9, it.value.length - 1) })
-
-            var base = 0.0
-            words.forEach { if (it == searchWordLower) base++ }
-            baseScore = base
-            matchingScore = base
-        }
+    data class Node(val v: Int, val x: Int, val y: Int) {
+        var left: Node? = null
+        var right: Node? = null
     }
 
-    fun solution(word: String, pages: Array<String>): Int {
-        val pageMap = pages.mapIndexed { index, s ->
-            WebPage(index, s, word)
-        }.let {
-            hashMapOf<String, WebPage>().apply {
-                it.forEach { set(it.url, it) }
-            }
-        }
+    fun solution(nodeinfo: Array<IntArray>): Array<IntArray> {
+        val pre = arrayListOf<Int>()
+        val post = arrayListOf<Int>()
+        val nodeList = nodeinfo.mapIndexed { index, ints -> Node(index + 1, ints[0], ints[1]) }
+                .sortedWith(compareBy({ -it.y }, { it.x }))
 
-        pageMap.values.forEach {
-            val s = if (it.links.isEmpty()) 0.0 else it.baseScore / it.links.size.toDouble()
-            it.links.forEach {
-                pageMap[it]?.apply {
-                    matchingScore += s
+        fun makeTree(list:List<Node>) {
+            val root = list[0]
+
+            val lefts = arrayListOf<Node>()
+            val rights = arrayListOf<Node>()
+
+            list.forEach {
+                if (it.x < root.x) {
+                    lefts.add(it)
+                } else if (it.x > root.x){
+                    rights.add(it)
                 }
             }
-        }
-
-        pageMap.values.forEach {
-            println("${it.id} -> ${it.matchingScore}  ${it.links}")
-        }
-
-        return pageMap.values.sortedWith(Comparator { o1, o2 ->
-            o1.matchingScore.compareTo(o2.matchingScore).let {
-                if (it == 0)
-                    o1.id.compareTo(o2.id)
-                else -it
+            if (lefts.isNotEmpty()) {
+                root.left = lefts[0]
+                makeTree(lefts)
             }
-        })[0].id
+
+            if (rights.isNotEmpty()) {
+                root.right = rights[0]
+                makeTree(rights)
+            }
+        }
+        makeTree(nodeList)
+
+        fun traversal(node: Node) {
+            pre.add(node.v)
+            node.left?.let { left -> traversal(left) }
+            node.right?.let { right -> traversal(right) }
+            post.add(node.v)
+        }
+
+        traversal(nodeList[0])
+
+        return arrayOf(pre.toIntArray(), post.toIntArray())
     }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             val s = KakaoB19_5()
-            val r = s.solution("muzi",
-                arrayOf("<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://careers.kakao.com/interview/list\"/>\n</head>  \n<body>\n<a href=\"https://programmers.co.kr/learn/courses/4673\"></a>#!MuziMuzi!)jayg07con&&\n\n</body>\n</html>",
-                    "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://www.kakaocorp.com\"/>\n</head>  \n<body>\ncon%\tmuzI92apeach&2<a href=\"https://hashcode.co.kr/tos\"></a>\n\n\t^\n</body>\n</html>"))
-            println(r)
+            val r = s.solution(arrayOf(intArrayOf(5, 3),
+                    intArrayOf(11, 5),
+                    intArrayOf(13, 3),
+                    intArrayOf(3, 5),
+                    intArrayOf(6, 1),
+                    intArrayOf(1, 3),
+                    intArrayOf(8, 6),
+                    intArrayOf(7, 2),
+                    intArrayOf(2, 2)))
+            println(r.contentDeepToString())
         }
     }
 }
-// 걸린 시간: 분
+// 걸린 시간: 37분

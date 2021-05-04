@@ -1,51 +1,65 @@
 package kakao.blind2019
 
-import java.util.*
-import kotlin.Comparator
-
-//https://programmers.co.kr/learn/courses/30/lessons/42891
+//https://programmers.co.kr/learn/courses/30/lessons/42893
 class KakaoB19_6 {
 
-    fun solution(food_times: IntArray, k_: Long): Int {
-        //리스트를 소팅하는것보다 우선순위 큐를 만들어서 소팅하는것이 더 빠르다.
-        val que = PriorityQueue(Comparator<Pair<Int, Int>> { o1, o2 ->
-            o1.second.compareTo(o2.second)
-        })
-        food_times.forEachIndexed { index, i ->
-            que.add(Pair(index+1, i))
+    data class Page(val idx: Int, val baseScore: Double, val links: List<String>) {
+        var totalScore = baseScore
+        fun getLinkScore() = if (links.isEmpty()) 0.0 else (baseScore / links.size)
+    }
+
+    fun solution(word: String, pages: Array<String>): Int {
+        var answer = 0
+        val pageMap = hashMapOf<String, Page>()
+        val regexUrl = """<meta property="og:url" content="[\S]*"""".toRegex()
+        val regexLink = """<a href="\S*">""".toRegex()
+        val wordRegex = """[a-zA-Z]+""".toRegex()
+        val lowWord = word.toLowerCase()
+        pages.forEachIndexed { i, script ->
+            val url = regexUrl.find(script)!!.value.let { it.substring(33, it.length - 1) }
+            val links = regexLink.findAll(script).map { it.value.let { it.substring(9, it.length - 2) } }.toList()
+            val score = wordRegex.findAll(script).count { it.value.toLowerCase() == lowWord}.toDouble()
+            pageMap[url] = Page(i, score, links)
         }
 
-        var k = k_
-        var deleted = 0
-        while (que.isNotEmpty() && que.size <= k) {
-            val min = que.peek().second
-            val maxReduced = que.size * (min - deleted).toLong()
-            if(maxReduced <= k)
-                k -= maxReduced
-            else {
-                k %= que.size
-                break
+        for (page in pageMap.values) {
+            val ls = page.getLinkScore()
+            page.links.forEach {
+                pageMap[it]?.let {
+                    it.totalScore +=  ls
+                }
             }
-
-            while (que.isNotEmpty() && que.peek().second == min) {
-                que.poll()
-            }
-            deleted = min
         }
 
-        return if (que.isNotEmpty())
-            que.sortedBy { it.first }[k.toInt()].first
-        else
-            -1
+        var maxScore = 0.0
+        for (page in pageMap.values) {
+
+            if (maxScore < page.totalScore) {
+                answer = page.idx
+                maxScore = page.totalScore
+            } else if (maxScore == page.totalScore) {
+                if (page.idx < answer)
+                    answer = page.idx
+            }
+        }
+
+        return answer
     }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             val s = KakaoB19_6()
-            val r = s.solution(intArrayOf(3, 1, 1, 1, 2, 4, 3), 12)
+//            val r = s.solution("Muzi",
+//                    arrayOf("<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://careers.kakao.com/interview/list\"/>\n</head>  \n<body>\n<a href=\"https://programmers.co.kr/learn/courses/4673\"></a>#!MuziMuzi!)jayg07con&&\n\n</body>\n</html>",
+//                            "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://www.kakaocorp.com\"/>\n</head>  \n<body>\ncon%\tmuzI92apeach&2<a href=\"https://hashcode.co.kr/tos\"></a>\n\n\t^\n</body>\n</html>"))
+            val r = s.solution("blind",
+                    arrayOf("<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://a.com\"/>\n</head>  \n<body>\nBlind Lorem Blind ipsum dolor Blind test sit amet, consectetur adipiscing elit. \n<a href=\"https://b.com\"> Link to b </a>\n</body>\n</html>",
+                            "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://b.com\"/>\n</head>  \n<body>\nSuspendisse potenti. Vivamus venenatis tellus non turpis bibendum, \n<a href=\"https://a.com\"> Link to a </a>\nblind sed congue urna varius. Suspendisse feugiat nisl ligula, quis malesuada felis hendrerit ut.\n<a href=\"https://c.com\"> Link to c </a>\n</body>\n</html>",
+                            "<html lang=\"ko\" xml:lang=\"ko\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta property=\"og:url\" content=\"https://c.com\"/>\n</head>  \n<body>\nUt condimentum urna at felis sodales rutrum. Sed dapibus cursus diam, non interdum nulla tempor nec. Phasellus rutrum enim at orci consectetu blind\n<a href=\"https://a.com\"> Link to a </a>\n</body>\n</html>"))
             println(r)
+
         }
     }
 }
-// 걸린 시간: 분
+// 걸린 시간: 101분
