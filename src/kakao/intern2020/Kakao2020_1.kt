@@ -2,69 +2,73 @@ package kakao.intern2020
 
 //https://programmers.co.kr/learn/courses/30/lessons/67256?language=kotlin
 class Kakao2020_1 {
-    val pos = hashMapOf<Char, IntArray>().apply {
-        put('1', intArrayOf(1, 1))
-        put('2', intArrayOf(1, 2))
-        put('3', intArrayOf(1, 3))
-        put('4', intArrayOf(2, 1))
-        put('5', intArrayOf(2, 2))
-        put('6', intArrayOf(2, 3))
-        put('7', intArrayOf(3, 1))
-        put('8', intArrayOf(3, 2))
-        put('9', intArrayOf(3, 3))
-        put('0', intArrayOf(4, 2))
-        put('*', intArrayOf(4, 1))
-        put('#', intArrayOf(4, 3))
-    }
-
     fun solution(numbers: IntArray, hand: String): String {
         var answer = ""
-        var left = '*'
-        var right = '#'
 
-        numbers.forEach {
-            val c = it.toString()[0]
-            when (it) {
-                1, 4, 7 -> {
-                    left = c
-                }
-                3, 6, 9 -> {
-                    right = c
-                }
+        var leftHand = 10
+        var rightHand = 12
 
-                else -> {
-                    val ld = getDistance(left, c)
-                    val rd = getDistance(right, c)
-                    if (ld > rd) {
-                        right = c
-                    } else if (ld < rd) {
-                        left = c
-                    } else {
-                        if (hand == "left")
-                            left = c
-                        else
-                            right = c
+        fun getD(hand: Int, des: Int): Int {
+            var hh = hand / 3
+            if (hand % 3 != 0) hh++
+
+            var dh = des / 3
+            if (des % 3 != 0) dh++
+
+            return Math.abs(dh - hh).let {
+                return@let when (hand) {
+                    2, 5, 8, 11 -> {
+                        it
+                    }
+                    else -> {
+                        it+1
                     }
                 }
             }
-            if(c == left) answer += 'L'
-            else answer += 'R'
+        }
+
+        numbers.forEach {
+            val num = if (it == 0) 11 else it
+            var h = ' '
+            when (num) {
+                1, 4, 7 -> {
+                    h = 'L'
+                }
+                3, 6, 9 -> {
+                    h = 'R'
+                }
+                else -> {
+                    val ld = getD(leftHand, num)
+                    val rd = getD(rightHand, num)
+                    if (ld < rd) {
+                        h = 'L'
+                    } else if (ld > rd) {
+                        h = 'R'
+                    } else {
+                        if (hand == "right") {
+                            h = 'R'
+                        } else {
+                            h = 'L'
+                        }
+                    }
+                }
+            }
+            if (h == 'L') leftHand = num
+            else rightHand = num
+            answer += h
         }
 
         return answer
     }
 
-    fun getDistance(from: Char, to: Char): Int {
-        return Math.abs(pos[from]!![0] - pos[to]!![0]) + Math.abs(pos[from]!![1] - pos[to]!![1])
-    }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             val s = Kakao2020_1()
-            var r = s.solution(intArrayOf(7, 0, 8, 2, 8, 3, 1, 5, 7, 6, 2), "left")
-            println(r)
+            println(s.solution(intArrayOf(1, 3, 4, 5, 8, 2, 1, 4, 5, 9, 5), "right"))
+            println(s.solution(intArrayOf(7, 0, 8, 2, 8, 3, 1, 5, 7, 6, 2), "left"))
         }
     }
 }
-// 걸린 시간: 22분
+// 걸린 시간: 43분

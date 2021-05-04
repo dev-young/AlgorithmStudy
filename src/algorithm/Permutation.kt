@@ -14,12 +14,12 @@ class Permutation {
      * @param r arr에서 몇개를 뽑을지
      * @param result 결과를 담을 배열 */
     fun permutation(
-        arr: IntArray,
-        r: Int,
-        result: ArrayList<IntArray>,
-        temp: IntArray = IntArray(r),
-        current: Int = 0,
-        visited: BooleanArray = BooleanArray(arr.size)
+            arr: IntArray,
+            r: Int,
+            result: ArrayList<IntArray>,
+            temp: IntArray = IntArray(r),
+            current: Int = 0,
+            visited: BooleanArray = BooleanArray(arr.size)
     ) {
         if (r == current) {
             result.add(temp.clone())
@@ -40,6 +40,29 @@ class Permutation {
     fun permutation(arr: IntArray, r: Int): ArrayList<IntArray> {
         val result = arrayListOf<IntArray>()
         permutation(arr, r, result)
+        return result
+    }
+
+    /**@param n 배열 크기 ex) n==4 -> {0,1,2,3} 중에서 r개 뽑는다.
+     * @param r 뽑을 갯수*/
+    fun permutation(n: Int, r: Int): ArrayList<IntArray> {
+        val visited = hashSetOf<Int>()
+        val result = arrayListOf<IntArray>()
+        fun perm(temp: IntArray = IntArray(r), current: Int = 0) {
+            if (r == current) {
+                result.add(temp.clone())
+            } else {
+                for (i in 0 until n) {
+                    if (!visited.contains(i)) {
+                        visited.add(i)
+                        temp[current] = i
+                        perm(temp, current + 1)
+                        visited.remove(i)
+                    }
+                }
+            }
+        }
+        perm()
         return result
     }
 
@@ -146,6 +169,7 @@ class Permutation {
         @JvmStatic
         fun main(args: Array<String>) {
             val per = Permutation()
+            per.permutation(3, 2)
             val arr = intArrayOf(1, 2, 3)
             val arr2 = arrayOf("1", "2", "3")
 

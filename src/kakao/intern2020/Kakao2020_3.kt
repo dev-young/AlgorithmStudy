@@ -2,59 +2,39 @@ package kakao.intern2020
 
 //https://programmers.co.kr/learn/courses/30/lessons/67258?language=kotlin
 class Kakao2020_3 {
-    /**투 포인터 알고리즘을 사용해서 풀어야한다!*/
+
     fun solution(gems: Array<String>): IntArray {
-        var answer = intArrayOf(0,gems.size-1)
-        val gemTypeCount = gems.toHashSet().size
-        val gemMap = linkedMapOf<String ,Int>()
-        var answerLength = gems.size
-        gems.forEachIndexed { idx, gem ->
-            if(gemMap.contains(gem)) {
-                gemMap.remove(gem)
-                gemMap[gem] = idx
-            } else gemMap[gem] = idx
-
-            if(gemMap.size == gemTypeCount) {
-                val l = gemMap.values.first()
-                val r = gemMap.values.last()
-                val length = r - l
-                if(length < answerLength) {
-                    answer[0] = l
-                    answer[1] = r
-                    answerLength = length
+        val answer = intArrayOf(0, gems.size)
+        val gemCount = hashMapOf<String, Int>()
+        val gemC = gems.distinct().size
+        if (gemC == 1) return intArrayOf(1, 1)
+        if (gemC == gems.size) return intArrayOf(1, gemC)
+        var s = 0
+        var e = 0
+        gemCount[gems[e]] = (gemCount[gems[e]] ?: 0) + 1
+        while (true) {
+            if (s > e) break
+            if (gemCount.size == gemC) {
+                if (e - s < answer[1] - answer[0]) {
+                    answer[0] = s
+                    answer[1] = e
                 }
+                if (gemCount[gems[s]] == 1) {
+                    gemCount.remove(gems[s])
+                } else {
+                    gemCount[gems[s]] = gemCount[gems[s]]!! - 1
+                }
+                s++
+            } else {
+                e++
+                if (e == gems.size) break
+                gemCount[gems[e]] = (gemCount[gems[e]] ?: 0) + 1
             }
+
         }
 
-        return intArrayOf(answer[0]+1, answer[1]+1)
-    }
-
-
-    fun solution0(gems: Array<String>): IntArray {
-        var answer = intArrayOf(1,gems.size)
-        val gemTypeCount = gems.toHashSet().size
-        val gemSet = hashSetOf<String>()
-        var maxDistance = gems.size - 1
-        if(gemTypeCount == gems.size) return intArrayOf(1, gemTypeCount)
-        gems.forEachIndexed { start, s ->
-            gemSet.clear()
-            var end = start + maxDistance
-            if(end >= gems.size) end = gems.size -1
-            for (i in start..end) {
-                val g = gems[i]
-                gemSet.add(g)
-                if(gemSet.size == gemTypeCount) {
-                    val d = i - start
-                    if(d < maxDistance) {
-                        maxDistance = d
-                        answer[0] = start+1
-                        answer[1] = i+1
-                        break
-                    }
-                }
-            }
-        }
-
+        answer[0]++
+        answer[1]++
         return answer
     }
 
@@ -69,4 +49,4 @@ class Kakao2020_3 {
         }
     }
 }
-// 걸린 시간: 27분 (투포인터 알고리즘 공부 후)
+// 걸린 시간: 39
