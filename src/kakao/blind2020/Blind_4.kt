@@ -1,37 +1,30 @@
 package kakao.blind2020
 
-import java.util.HashMap
-
 //https://programmers.co.kr/learn/courses/30/lessons/60060?language=kotlin
 class Blind_4 {
     fun solution(words: Array<String>, queries: Array<String>): IntArray {
         var answer = IntArray(queries.size)
 
         val trie = Trie()
-        val invTrie = Trie()
+        val trieInv = Trie()
+
         words.forEach {
             trie.insert(it)
-            invTrie.insert(it.reversed())
+            trieInv.insert(it.reversed())
         }
 
-        queries.forEachIndexed { index, querie ->
-            var count: Int
-            val targetStr = querie.replace("?", "")
-            val wildCardCount = querie.length - targetStr.length
-            count = if(querie.startsWith("?")){
-                invTrie.getRemainLength(targetStr.reversed())[wildCardCount]?:0
+        queries.forEachIndexed { i, it ->
+            val c = it.count { it == '?' }
+            if(it.startsWith("?")) {
+                answer[i] = trieInv.getRemainLength(it.replace("?", "").reversed())[c] ?: 0
             } else {
-                trie.getRemainLength(targetStr)[wildCardCount]?:0
+                answer[i] = trie.getRemainLength(it.replace("?", ""))[c] ?: 0
             }
-
-            answer[index] = count
         }
-
-
         return answer
     }
 
-    class Trie internal constructor() {
+    class Trie {
         private val root: TrieNode
         fun insert(word: String) {
             var current = root
@@ -71,18 +64,22 @@ class Blind_4 {
         }
     }
 
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val s = Blind_4()
+            val r = s.solution(
+                    arrayOf("frodo", "front", "frost", "frozen", "frame", "kakao"), arrayOf(
+                    "fro??",
+                    "????o",
+                    "fr???",
+                    "fro???",
+                    "frodo",
+                    "fro"
+            )
+            )
+            println(r.contentToString())
+        }
+    }
 }
-
-fun main() {
-    val s = Blind_4()
-    val r = s.solution(
-        arrayOf("frodo", "front", "frost", "frozen", "frame", "kakao"), arrayOf(
-            "fro??",
-            "????o",
-            "fr???",
-            "fro???",
-            "frod?"
-        )
-    )
-    println(r.contentToString())
-}
+// 걸린 시간(분): 42

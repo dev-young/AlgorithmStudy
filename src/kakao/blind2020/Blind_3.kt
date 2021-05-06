@@ -1,98 +1,87 @@
 package kakao.blind2020
 
-import java.lang.Exception
-
+//https://programmers.co.kr/learn/courses/30/lessons/60059
 class Blind_3 {
-    fun solution(originalKey: Array<IntArray>, lock: Array<IntArray>): Boolean {
-        var answer = false
 
-        val key = Array(lock.size) { IntArray(lock.size) }
-        lock.forEachIndexed { i, ints ->
-            ints.forEachIndexed { j, n ->
-                try {
-                    key[i][j] = originalKey[i][j]
-                } catch (e:Exception) {
-                    key[i][j] = 0
+    fun solution(key: Array<IntArray>, lock: Array<IntArray>): Boolean {
+        val oneSet = hashSetOf<Pair<Int, Int>>()
+        fun rotate() {
+            oneSet.clear()
+            var temp = 0
+            val size = key.size
+            for (i in 0 until size / 2) {
+                for (j in i until size - i - 1) {
+                    temp = key[size - j - 1][i]
+                    key[size - j - 1][i] = key[size - i - 1][size - j - 1]
+                    if (key[size - j - 1][i] == 1) oneSet.add(Pair(size - j - 1, i))
+                    key[size - i - 1][size - j - 1] = key[j][size - i - 1]
+                    if (key[size - i - 1][size - j - 1] == 1) oneSet.add(Pair(size - i - 1, size - j - 1))
+                    key[j][size - i - 1] = key[i][j]
+                    if (key[j][size - i - 1] == 1) oneSet.add(Pair(j, size - i - 1))
+                    key[i][j] = temp
+                    if (key[i][j] == 1) oneSet.add(Pair(i, j))
                 }
             }
+            if (size % 2 == 1) {
+                if(key[size/2][size/2] == 1) oneSet.add(Pair(size/2, size/2))
+            }
         }
-        for (i in -lock.size+1 until  lock.size) {
-            for (j in -lock.size+1 until  lock.size) {
-                println("$i $j")
-                var changedKey = move(key, i, j)
-                for (r in 1..4) {
-                    changedKey = rotate(changedKey)
-                    if(check(changedKey, lock)) return true
 
+        val lockRange = key.size - 1 until key.size + lock.size - 1
+        val s = lock.size + key.size + key.size - 2
+        var zeroCount = 0
+        val board = Array(s) { i ->
+            IntArray(s) { j ->
+                if (i in lockRange && j in lockRange) {
+                    lock[i - key.size + 1][j - key.size + 1].let {
+                        if (it == 0) zeroCount++
+                        it
+                    }
+                } else -1
+            }
+        }
+
+        fun check(): Boolean {
+            for (i in 0..board.size - key.size) {
+                for (j in 0..board.size - key.size) {
+                    var count = 0   //홈을 채운 갯수
+                    for (pair in oneSet) {
+                        val ki = pair.first + i
+                        val kj = pair.second + j
+                        if (board[ki][kj] == 1)
+                            break
+                        if (board[ki][kj] == 0) {
+                            count++
+                        }
+                    }
+                    if (count == zeroCount)
+                        return true
                 }
             }
+            return false
+        }
+        for (i in 1..4) {
+            rotate()
+            if (check()) return true
         }
 
-        return answer
+        return false
     }
 
-
-    // lock를 모두 채울 수 있는지 확인
-    fun check(key: Array<IntArray>, lock: Array<IntArray>): Boolean {
-        lock.forEachIndexed { i, ints ->
-            ints.forEachIndexed { j, num ->
-                if(num == 0) {
-                    if(key[i][j] == 0)
-                        return false
-                } else {
-                    if(key[i][j] == 1)
-                        return false
-                }
-            }
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val s = Blind_3()
+            val r = s.solution(
+                    arrayOf(intArrayOf(0, 0, 0), intArrayOf(1, 1, 0), intArrayOf(0, 1, 1)),
+                    arrayOf(intArrayOf(1, 1, 1,1), intArrayOf(1, 1, 1,0), intArrayOf(1, 1, 1,0), intArrayOf(1, 1, 1,1))
+            )
+//            val r = s.solution(
+//                    arrayOf(intArrayOf(0, 0, 0), intArrayOf(1, 0, 0), intArrayOf(0, 1, 1)), arrayOf(
+//                    intArrayOf(1, 1, 1), intArrayOf(1, 1, 0), intArrayOf(1, 0, 1)
+//            ))
+            println(r)
         }
-
-        return true
     }
-
-    // 90도 회전
-    fun rotate(arr: Array<IntArray>): Array<IntArray> {
-        val n = arr.size
-        val m: Int = arr[0].size
-        val rotate = Array(m) { IntArray(n) }
-        for (i in rotate.indices) {
-            for (j in rotate[i].indices) {
-                rotate[i][j] = arr[n - 1 - j][i]
-            }
-        }
-        return rotate
-    }
-
-    // x칸, y칸 만큼 이동 (빈칸은 0)
-    fun move(arr: Array<IntArray>, x:Int, y:Int): Array<IntArray> {
-        val  empty = 0  //유효하지 않은 칸 (빈칸)
-        val n = arr.size
-        val m: Int = arr[0].size
-        val moved = Array(m) { IntArray(n) }
-        for (i in moved.indices) {
-            for (j in moved[i].indices) {
-                val movedI = i-y
-                val movedJ = j-x
-                if(movedI < 0 || movedJ < 0 || movedI > moved.lastIndex || movedJ > moved[0].lastIndex)
-                    moved[i][j] = empty
-                else
-                    moved[i][j] = arr[movedI][movedJ]
-            }
-        }
-        return moved
-    }
-
 }
-
-fun main() {
-    val s = Blind_3()
-    val r = s.solution(
-        arrayOf(intArrayOf(0, 0, 0), intArrayOf(1, 0, 0), intArrayOf(0, 1, 1)), arrayOf(
-            intArrayOf(
-                1,
-                1,
-                1
-            ), intArrayOf(1, 1, 0), intArrayOf(1, 0, 1)
-        )
-    )
-    println(r)
-}
+// 걸린 시간(분): 77

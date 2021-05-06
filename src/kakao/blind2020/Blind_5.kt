@@ -1,41 +1,26 @@
 package kakao.blind2020
 
+//https://programmers.co.kr/learn/courses/30/lessons/60061
 class Blind_5 {
     fun solution(n: Int, build_frame: Array<IntArray>): Array<IntArray> {
-        var answer = hashMapOf<String, IntArray>()
-        val PILLAR = 0  //기둥
-        val TENT = 1    //보
-        val BUILD = 1   //설치
+        var answer = arrayListOf<IntArray>()
+        val board = Array(n+1) { IntArray(n+1) { -1 } }
 
-        fun getKey(x: Int, y: Int, type:Int) = "${x},${y},$type"
-        fun getKey(array: IntArray) = getKey(array[0], array[1], array[2])
-
-        fun updateAnswer(array: IntArray) {
-            if(array[3] == BUILD)
-                answer[getKey(array)] = intArrayOf(array[0], array[1], array[2])
-            else
-                answer.remove(getKey(array))
-        }
-
-        //해당 위치에 존재할 수 있는지 여부 반환
-        fun isAvailable(x: Int, y: Int, type: Int): Boolean {
-            //설치하는 경우
-            if (type == PILLAR) {   //기둥
-                if (y == 0
-                    || answer[getKey(x, y - 1, PILLAR)] != null
-                    || answer[getKey(x - 1, y, TENT)] != null
-                    || answer[getKey(x, y, TENT)] != null
+        fun check(x: Int, y: Int, s: Int): Boolean {
+            if (s == 0) {   //기둥
+                if (
+                        y == 0 || /**바닥 위*/
+                        (board[x][y - 1] == 0 || board[x][y - 1] == 2) ||   /**기둥 위*/
+                        (x > 0 && board[x - 1][y] > 0) ||  /**보자기 왼쪽 위*/
+                        (board[x][y] > 0) /**보자기 오른쪽 위*/
                 ) {
                     return true
                 }
             } else {    //보
-                val keyBottom = getKey(x, y - 1, PILLAR)    //아래 좌표 키
-                val keyBottomRight = getKey(x + 1, y - 1, PILLAR)    //오른쪽 아래 좌표 키
-                val keyLeft = getKey(x - 1, y, TENT)    //왼쪽 좌표 키
-                val keyRight = getKey(x + 1, y, TENT)    //오른쪽 좌표 키
-                if (answer[keyBottom] != null
-                    || answer[keyBottomRight] != null
-                    || ( answer[keyLeft] != null && answer[keyRight] != null )
+                if(
+                        (board[x][y - 1] == 0 || board[x][y - 1] == 2) ||   /**기둥 위*/
+                        (x < board.size-1 && (board[x+1][y - 1] == 0 || board[x+1][y - 1] == 2)) ||   /**기둥 위*/
+                        (x in 1 until board.size-1 && board[x+1][y] > 0 && board[x-1][y] > 0)  /**보자기 왼쪽 위*/
                 ) {
                     return true
                 }
@@ -43,59 +28,65 @@ class Blind_5 {
             return false
         }
 
-        fun isAvailable(build: IntArray): Boolean {
-            val x = build[0]
-            val y = build[1]
-            val type = build[2]
-
-            if (build[3] == BUILD) {
-                return isAvailable(x, y, type)
-            } else {
-                //철거하는 경우 일단 제거후 연결된 각 구조물마다 존재 가능 여부를 확인한다.
-                updateAnswer(build)
-
-                answer.values.forEach {
-                    if(!isAvailable(it[0], it[1], it[2])){
-                        build[3] = BUILD
-                        updateAnswer(build)
-                        return false
-                    }
-                }
-                return true
-            }
+        fun add(x: Int, y: Int, s: Int) {
+            answer.add(intArrayOf(x, y, s))
+            if (board[x][y] != -1) {
+                board[x][y] = 2
+            } else board[x][y] = s
         }
 
-
+        fun remove(x: Int, y: Int, s: Int) {
+            for (i in answer.indices) {
+                val arr = answer[i]
+                if (arr[0] == x && arr[1] == y && (arr[2] == s)) {
+                    answer.removeAt(i)
+                    break
+                }
+            }
+            if (board[x][y] == 2) {
+                if (s == 1) board[x][y] = 0
+                else board[x][y] = 1
+            } else board[x][y] = -1
+        }
 
         build_frame.forEach {
-            if(isAvailable(it)){
-                updateAnswer(it)
-            }
+            val x = it[0]
+            val y = it[1]
+            val s = it[2]
+            val build = it[3] == 1
 
+            if (build) {
+                if(check(x,y,s)) add(x,y,s)
+            } else {
+                remove(x,y,s)
+                for (a in answer) {
+                    if(!check(a[0], a[1], a[2])) {
+                        add(x,y,s)
+                        break
+                    }
+                }
+            }
         }
 
-//        println(answer.values.toTypedArray().contentDeepToString())
-        return answer.values.sortedWith(Comparator { o1, o2 ->
-            o1[0].compareTo(o2[0]).let { if (it == 0) o1[1].compareTo(o2[1]).let { if (it == 0) o1[2].compareTo(o2[2]) else it } else it }
-        }).toTypedArray()
+        return answer.sortedWith(compareBy({it[0]}, {it[1]}, {it[2]})).toTypedArray()
     }
 
-}
-
-fun main() {
-    val s = Blind_5()
-    val ints = arrayOf(
-        intArrayOf(0, 0, 0, 1),
-        intArrayOf(2, 0, 0, 1),
-        intArrayOf(4, 0, 0, 1),
-        intArrayOf(0, 1, 1, 1),
-        intArrayOf(1, 1, 1, 1),
-        intArrayOf(2, 1, 1, 1),
-        intArrayOf(3, 1, 1, 1),
-        intArrayOf(2, 0, 0, 0),
-        intArrayOf(1, 1, 1, 0),
-        intArrayOf(2, 2, 0, 1)
-    )
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val s = Blind_5()
+            val ints = arrayOf(
+                    intArrayOf(0, 0, 0, 1),
+                    intArrayOf(2, 0, 0, 1),
+                    intArrayOf(4, 0, 0, 1),
+                    intArrayOf(0, 1, 1, 1),
+                    intArrayOf(1, 1, 1, 1),
+                    intArrayOf(2, 1, 1, 1),
+                    intArrayOf(3, 1, 1, 1),
+                    intArrayOf(2, 0, 0, 0),
+                    intArrayOf(1, 1, 1, 0),
+                    intArrayOf(2, 2, 0, 1)
+            )
 //    println(s.solution(
 //        5, arrayOf(
 //            intArrayOf(1, 0, 0, 1),
@@ -109,5 +100,8 @@ fun main() {
 //        )
 //    ).contentDeepToString())
 
-    println(s.solution(5, ints).contentDeepToString())
+            println(s.solution(5, ints).contentDeepToString())
+        }
+    }
 }
+// 걸린 시간(분): 95
