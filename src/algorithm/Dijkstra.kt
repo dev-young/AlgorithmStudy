@@ -3,7 +3,7 @@ package algorithm
 import java.util.*
 import kotlin.collections.HashMap
 
-/***/
+/**하나의 정점에서 모든 정점으로 가는 최단경로를 구하는 알고리즘*/
 class Dijkstra {
 
     //인접리스트 가중치 그래프

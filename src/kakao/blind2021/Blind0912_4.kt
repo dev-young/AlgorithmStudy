@@ -23,7 +23,6 @@ class Blind0912_4 {
                     if (arr[j][i] == inf || arr[i][k] == inf) continue
                     if (arr[j][k] > arr[j][i] + arr[i][k]){
                         arr[j][k] = arr[j][i] + arr[i][k]
-                        arr[k][j] = arr[j][k]
                     }
                 }
         }
