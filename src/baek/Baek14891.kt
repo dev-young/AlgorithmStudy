@@ -3,7 +3,7 @@ package baek
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-//경사로
+//톱니바퀴
 class Baek14891 {
 
     class Wheel(val w: IntArray) {
