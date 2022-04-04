@@ -1,5 +1,7 @@
 package algorithm
 
+import kotlin.math.sqrt
+
 class Numbers {
 
     //최대 공약수 (유클리드 알고리즘)
@@ -19,12 +21,14 @@ class Numbers {
     fun lcm(a: Int, b: Int) = (a * b) / gcd(a, b)
 
     //소수판별 ( 참고: https://myjamong.tistory.com/139?category=898047 )
-    fun isPrime(n: Int): Boolean {
-        var i = 2
-        while (i * i <= n) {
-            if (n % i == 0) return false
-            i++
+    private val primeSet = hashSetOf<Long>()
+    fun isPrime(n: Long): Boolean {
+        if (primeSet.contains(n)) return true
+        if (n < 0) return false
+        for (i in 2..sqrt(n.toDouble()).toInt()) {
+            if (n % i == 0L) return false
         }
+        primeSet.add(n)
         return true
     }
 
