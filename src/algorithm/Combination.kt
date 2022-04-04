@@ -46,8 +46,8 @@ class Combination {
         val visited = hashSetOf<Int>()
         val result = arrayListOf<IntArray>()
         fun comb(i:Int){
-            if (i == n) return
             if(visited.size == r) {
+                result.add(visited.toIntArray())
                 val temp = visited.map { it }.toIntArray()
                 println(temp.contentToString())
                 return
@@ -55,6 +55,45 @@ class Combination {
             visited.add(i+1)
             comb(i+1)
             visited.remove(i+1)
+            comb(i+1)
+        }
+        comb(-1)
+        return result
+    }
+
+    fun <T>combination(arr: Array<T>, r:Int): ArrayList<List<T>> {
+        val visited = hashSetOf<T>()
+        val result = arrayListOf<List<T>>()
+        fun comb(i:Int){
+            if(visited.size == r) {
+                result.add(visited.toList())
+                return
+            }
+            if (i == arr.lastIndex) return
+            visited.add(arr[i+1])
+            comb(i+1)
+            visited.remove(arr[i+1])
+            comb(i+1)
+        }
+        comb(-1)
+        return result
+    }
+
+    /**@param arr 조합을 뽑을 대상
+     * @param range 뽑힌 갯수 set   ex) 2,3,5개의 원소 구성된 조합 -> range = setOf(2,3,5)
+     * 이걸 쓸바에는 그냥 부분집합 쓰는것도 나쁘지 않을듯
+     * */
+    fun combination(arr: CharArray, range:Set<Int>): Set<String> {
+        val visited = hashSetOf<Char>()
+        val result = hashSetOf<String>()
+        fun comb(i:Int){
+            if(range.contains(visited.size)) {
+                result.add(visited.sorted().joinToString(""))
+            }
+            if (i == arr.lastIndex) return
+            visited.add(arr[i+1])
+            comb(i+1)
+            visited.remove(arr[i+1])
             comb(i+1)
         }
         comb(-1)
