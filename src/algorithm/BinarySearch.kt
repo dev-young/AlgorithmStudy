@@ -71,7 +71,7 @@ class BinarySearch {
         var high = sortedList.size
         var mid = (low + high) / 2
 
-        if (search < sortedList.first()) return 0
+        if (sortedList.isEmpty() || search < sortedList.first()) return 0
 
         while (low < high) {
             if (sortedList[mid] < search) {
