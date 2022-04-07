@@ -2,46 +2,23 @@ package kakao.intern2021
 
 class Kakao2021_1 {
     fun solution(s: String): Int {
-        var answer: String = ""
+        val map = hashMapOf<String ,Int>()
+        map["zero"] = 0
+        map["one"] = 1
+        map["two"] = 2
+        map["three"] = 3
+        map["four"] = 4
+        map["five"] = 5
+        map["six"] = 6
+        map["seven"] = 7
+        map["eight"] = 8
+        map["nine"] = 9
         var str = s
-        while (str.isNotEmpty()) {
-            if (str.startsWith("one")) {
-                answer += "1"
-                str = str.substring(3)
-            } else if (str.startsWith("two")) {
-                answer += "2"
-                str = str.substring(3)
-            } else if (str.startsWith("three")) {
-                answer += "3"
-                str = str.substring(5)
-            } else if (str.startsWith("four")) {
-                answer += "4"
-                str = str.substring(4)
-            } else if (str.startsWith("five")) {
-                answer += "5"
-                str = str.substring(4)
-            } else if (str.startsWith("six")) {
-                answer += "6"
-                str = str.substring(3)
-            } else if (str.startsWith("seven")) {
-                answer += "7"
-                str = str.substring(5)
-            } else if (str.startsWith("eight")) {
-                answer += "8"
-                str = str.substring(5)
-            } else if (str.startsWith("nine")) {
-                answer += "9"
-                str = str.substring(4)
-            } else if (str.startsWith("zero")) {
-                answer += "0"
-                str = str.substring(4)
-            } else {
-                answer += str[0]
-                str = str.substring(1)
-            }
+        map.forEach { t, u ->
+            str = str.replace(t, u.toString())
         }
 
-        return answer.toInt()
+        return str.toInt()
     }
 
     companion object {
@@ -56,4 +33,4 @@ class Kakao2021_1 {
         }
     }
 }
-// 걸린 시간(분):11
+// 걸린 시간(분): 5.5
