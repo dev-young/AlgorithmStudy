@@ -114,12 +114,20 @@ class PowerSet {
         @JvmStatic
         fun main(args: Array<String>) {
             val powerSet = PowerSet()
-            val arr = intArrayOf(1, 2, 3)
-            powerSet.powerSet(arr).forEach { println(it.contentToString()) }
-            println()
-            powerSet.powerSet(4).forEach { println(it.contentToString()) }
-            println()
-            powerSet.withBit(arr).forEach { println(it.contentToString()) }
+            val arr = intArrayOf(1, 2, 3, 4,5,6,7,8,9,10)
+//            arr.reverse()
+//            println(powerSet.withBit(arr).size)
+//            powerSet.powerSet(arr).reversed().forEach {
+//                print("${it.sum()} ")
+//                println(it.contentToString())
+//            }
+//            println()
+//            powerSet.powerSet(4).forEach { println(it.contentToString()) }
+//            println()
+            powerSet.withBit(intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).apply { reverse() }).map { Pair(it.sum(), it) }.sortedBy { it.first }.reversed().forEach { (sum, arr) ->
+                print("${sum} ")
+                println(arr.contentToString())
+            }
 
 
         }
