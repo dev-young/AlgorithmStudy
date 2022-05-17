@@ -4,6 +4,18 @@ import kotlin.math.sqrt
 
 class Numbers {
 
+    /**약수의 갯수 빠르게 구하는 방식*/
+    fun divisorCount(n: Int): Int {
+        var cnt = 0
+        for (i in 1..n) {
+            val ii = i * i
+            if (ii > n) break
+            if (ii == n) cnt++
+            else if(n%i == 0) cnt += 2
+        }
+        return cnt
+    }
+
     //최대 공약수 (유클리드 알고리즘)
     fun gcd(a_: Int, b_: Int): Int {
         var a = Math.max(a_, b_)

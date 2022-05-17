@@ -2,7 +2,10 @@ package algorithm
 
 class BinarySearch {
 
-    /**해당 값 혹은 해당 값 다음으로 큰 값을 가지는 인덱스 반환 */
+    /**해당 값 혹은 해당 값 다음으로 큰 값을 가지는 인덱스 반환
+     * 해당 값이 여러개인 경우 가장 마지막 인덱스 반환
+     * 다음 값이 여러개인 경우 가장 처음 인덱스 반환
+     * 그냥 쓰지 말자*/
     fun search(arr: List<Int>, search: Int): Int {
         var low = 0
         var mid = 0
@@ -30,21 +33,56 @@ class BinarySearch {
         return mid
     }
 
-    fun searchTest() {
-        val list = arrayListOf(5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 8, 9)
-        println(search(list, 4))
-        println(search(list, 5))
-        println(search(list, 6))
-        println(search(list, 7))
-        println(search(list, 10))
+    /**경계의 왼쪽지점을 반환
+     * 만약 입력받은 arr를 check를 통해 변환해서 [F,F,F,F,F,T,T,T,T,T]와 같은 모양인 경우 마지막 F의 인덱스 반환
+     * 만약 첫번째 원소의 check 값이 동일하면 -1 반환*/
+    fun findBoundary(arr: IntArray, check: (n: Int) -> Boolean): Int {
+        var s = 0
+        var e = arr.lastIndex
+        if (check(arr.first())) return -1
+        if (!check(arr.last())) return -1
+        while (check(arr[s]) == check(arr[s+1])) {
+            val mid = (s + e) / 2
+            if (check(arr[mid])) {
+                e = mid
+            } else s = mid
+        }
+        return s
     }
 
-    /**해당 값 혹은 해당 값 다음으로 작은 값을 가지는 최초의 인덱스 반환 */
+    /**위 로직의 List 버전*/
+    fun <T>List<T>.findBoundary(check: (n: T) -> Boolean) : Int {
+        var s = 0
+        var e = lastIndex
+        if (check(first())) return -1
+        if (!check(last())) return -1
+        while (check(this[s]) == check(this[s+1])) {
+            val mid = (s + e) / 2
+            if (check(this[mid])) {
+                e = mid
+            } else
+                s = mid
+        }
+        return s
+    }
+
+    fun searchTest() {
+        val list = arrayListOf(5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 8, 9)
+        println(list.findBoundary { it >= 7 })
+        println(list.findBoundary { it > 17 })
+        println(list.findBoundary { it > 4 })
+//        println(findFirst(list, 7))
+//        println(findFirst(list, 10))
+    }
+
+    /**해당 값 혹은 해당 값 다음으로 작은 값을 가지는 최초의 인덱스 반환
+     * 해당 값보다 작은 값이 없으면 -1 반환 */
     fun findFirst(arr: List<Int>, search: Int): Int {
         var low = 0
         var mid = 0
         var high = arr.size
-
+        if (arr.first() > search) return -1
+        if (arr.first() == search) return 0
         if (search > arr.last()) return arr.lastIndex
 
         while (low <= high) {
@@ -77,7 +115,7 @@ class BinarySearch {
             if (sortedList[mid] < search) {
                 low = mid + 1
             } else {
-                if(mid>0 && sortedList[mid-1] < search)
+                if (mid > 0 && sortedList[mid - 1] < search)
                     break
                 high = mid - 1
             }
@@ -101,7 +139,7 @@ class BinarySearch {
             if (sortedList[mid] > search) {
                 high = mid - 1
             } else {
-                if(sortedList[mid+1] > search)
+                if (sortedList[mid + 1] > search)
                     break
                 low = mid + 1
             }
@@ -213,16 +251,16 @@ class BinarySearch {
             val test = BinarySearch().apply {
 //                val list = arrayListOf(10, 40, 50, 60, 65)
 //                val list = arrayListOf(10,30,30,30,40,40,40,50)
-                val list = arrayListOf(50)
-                println(findFirstBig(list, 30))
-                println(findFirstBig(list, 20))
-                println(findFirstBig(list, 10))
-                println(findFirstBig(list, 0))
-                println(findFirstBig(list, 35))
-                println(findFirstBig(list, 40))
-                println(findFirstBig(list, 60))
+//                val list = arrayListOf(50)
+//                println(findFirstBig(list, 30))
+//                println(findFirstBig(list, 20))
+//                println(findFirstBig(list, 10))
+//                println(findFirstBig(list, 0))
+//                println(findFirstBig(list, 35))
+//                println(findFirstBig(list, 40))
+//                println(findFirstBig(list, 60))
             }
-//            test.searchTest()
+            test.searchTest()
 //            println()
 //            test.addToTest()
 
