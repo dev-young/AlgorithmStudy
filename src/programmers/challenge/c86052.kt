@@ -12,61 +12,57 @@ class c86052 {
         val ySize = grid.size
         val resultList = arrayListOf<Int>()
         val cyclePathSet = hashSetOf<Triple<Int, Int, Int>>()
-        var startX = 0
-        var startY = 0
-        var startDir = 0
 
-        var currentPathSet = hashSetOf<Triple<Int, Int, Int>>()
+        fun start(startX: Int, startY: Int, startDir: Int){
+            var x = startX
+            var y = startY
+            var direction = startDir
+            var cnt = 0
+            var currentPathSet = hashSetOf<Triple<Int, Int, Int>>()
 
-        fun dfs(x: Int, y: Int, direction: Int, cnt: Int = 0) {
-            val currentPath = Triple(x, y, direction)
-
-            if (cnt > 0) {
-                if (x == startX && y == startY && startDir == direction) {
-                    //새로운 싸이클 발견
-                    cyclePathSet.addAll(currentPathSet)
-                    cyclePathSet.add(currentPath)
-                    resultList.add(cnt)
-                    return
+            while (true) {
+                val currentPath = Triple(x, y, direction)
+                if (cnt > 0) {
+                    if (x == startX && y == startY && startDir == direction) {
+                        //새로운 싸이클 발견
+                        cyclePathSet.addAll(currentPathSet)
+                        cyclePathSet.add(currentPath)
+                        resultList.add(cnt)
+                        break
+                    }
                 }
+
+                if (currentPathSet.contains(currentPath))
+                    break
+
+                currentPathSet.add(currentPath)
+
+                if (cyclePathSet.contains(currentPath))
+                    break
+
+                x += delta[direction][0]
+                y += delta[direction][1]
+                if (x < 0) x = xSize - 1
+                else if (x == xSize) x = 0
+                if (y < 0) y = ySize - 1
+                else if (y == ySize) y = 0
+                direction = when (grid[y][x]) {
+                    'R' -> {
+                        (direction + 1) % 4
+                    }
+                    'L' -> {
+                        (direction + 3) % 4
+                    }
+                    else -> direction
+                }
+                cnt++
             }
-
-            if (currentPathSet.contains(currentPath))
-                return
-
-            currentPathSet.add(currentPath)
-
-            if (cyclePathSet.contains(currentPath))
-                return
-
-            var nx = x + delta[direction][0]
-            var ny = y + delta[direction][1]
-            if (nx < 0) nx = xSize - 1
-            else if (nx == xSize) nx = 0
-            if (ny < 0) ny = ySize - 1
-            else if (ny == ySize) ny = 0
-            val nd = when (grid[ny][nx]) {
-                'R' -> {
-                    (direction + 1) % 4
-                }
-                'L' -> {
-                    (direction + 3) % 4
-                }
-                else -> {
-                    direction
-                }
-            }
-            dfs(nx, ny, nd, cnt + 1)
         }
 
         for (x in 0 until xSize) {
             for (y in 0 until ySize) {
                 for (d in 0 .. 3) {
-                    currentPathSet.clear()
-                    startX = x
-                    startY = y
-                    startDir = d
-                    dfs(x, y, d)
+                    start(x, y, d)
                 }
             }
         }
@@ -84,4 +80,4 @@ class c86052 {
         }
     }
 }
-// 걸린 시간(분): 58분 (테케7:런타임, 테케8:시간초과)
+// 걸린 시간(분): 71분
