@@ -7,5 +7,5 @@ fun String.toArrayOfIntArray() = replace(" ","").removeSurrounding("[", "]")
 fun String.toArrayOfStringArray() = removeSurrounding("[", "]")
     .removeSurrounding("[", "]")
     .split("],[")
-    .map { it.split(",").map { it.removeSurrounding("") } }
+    .map { it.split(",").map { it.removeSurrounding("") }.toTypedArray() }
     .toTypedArray()
